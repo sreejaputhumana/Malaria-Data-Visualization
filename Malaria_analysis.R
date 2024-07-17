@@ -1,3 +1,5 @@
+
+
 # Load necessary libraries
 library(tidyverse)
 library(readr)
@@ -11,6 +13,7 @@ library(viridis)
 library(readr)
 library(gridExtra)
 library(htmlwidgets)
+library(treemap)
 
 # Load the datasets
 estimated_numbers <- read_csv("estimated_numbers.csv")
@@ -139,13 +142,22 @@ print(head(incidence_map_data))
 # Handle any NAs in the merged data
 incidence_map_data <- incidence_map_data %>% drop_na(`Incidence per 1000 population`)
 
+# Display the first few rows of your data to check column names
+names(incidence_map_data)
+
+
+
 # Visualize incidence data
-tm_shape(incidence_map_data) +
-  tm_polygons("Incidence per 1000 population", style = "quantile", palette = "magma", title = "Malaria Incidence per 1000 Population at Risk") +
+tmap_mode("view")
+plot3 <- tm_shape(incidence_map_data) +
+  tm_polygons("Incidence per 1000 population", style = "quantile", palette = "magma", title = "Malaria Incidence per 1000 Population at Risk",
+              id = "NAME", popup.vars = c("Country Name" = "NAME", "Incidence per 1000 population" = "Incidence per 1000 population")) +
   tm_layout(title = "Global Malaria Incidence",
             title.position = c("left", "top"),
             legend.outside = TRUE)
 
+#Save the interactive plot as an HTML file
+saveWidget(tmap::tmap_leaflet(plot3), "Global Malaria Incidence.html")
 
 
 # Insight 3: Comparison of cases and deaths
@@ -198,15 +210,6 @@ print(plot_cases)
 print(plot_deaths)
 
 
-grid.arrange(plot_deaths, nrow = 1, top = "Top 50 Reported Malaria Deaths in Latest Year")
-
-
-
-# Install necessary packages if not already installed
-if (!require(treemap)) install.packages("treemap")
-
-# Load the treemap package
-library(treemap)
 
 # Treemap for Reported Cases
 treemap(top_50_cases,
@@ -237,7 +240,7 @@ deaths_data <- top_50_deaths %>%
 
 
 
-# Interactive treemap for Reported Cases with unique colors for each country
+# Create the interactive treemap
 plot_cases <- plot_ly(
   data = cases_data,
   type = "treemap",
@@ -249,13 +252,18 @@ plot_cases <- plot_ly(
   hoverinfo = "text",
   text = ~text,
   marker = list(colors = ~NAME, colorscale = "Set3", showscale = FALSE)
-) %>%
-  layout(title = "Top 50 Countries with Reported Malaria Cases (2000-2018)")
+)
 
+# Add layout with title
+plot_cases <- layout(plot_cases, title = list(text = "Top 50 Countries with Reported Malaria Cases (2000-2018)"))
 
+# Display the plot
+plot_cases
 
+#Save the interactive plot as an HTML file
+saveWidget(plot_cases, "Top 50 Countries with Reported Malaria Cases.html")
 
-# Interactive treemap for Reported Deaths
+# Create the interactive treemap for Reported Deaths
 plot_deaths <- plot_ly(
   data = deaths_data,
   type = "treemap",
@@ -266,16 +274,18 @@ plot_deaths <- plot_ly(
   textinfo = "label+value+percent entry",
   hoverinfo = "text",
   text = ~text,
-  marker = list(colors = ~`Reported Deaths`, colorscale = "Reds", showscale = TRUE)
-) %>%
-  layout(title = "Top 50 Countries with Reported Malaria Deaths (2000-2018)")
+  marker = list(colors = ~NAME, colorscale = "Set3", showscale = FALSE)
+)
 
-# Print the interactive plots
-plot_cases
+# Add layout with title
+plot_deaths <- layout(plot_deaths, title = list(text = "Top 50 Countries with Reported Malaria Deaths (2000-2018)"))
+
+# Display the plot
 plot_deaths
 
 
-
+#Save the interactive plot as an HTML file
+saveWidget(plot_deaths, "Top 50 Countries with Reported Malaria Deaths.html")
 
 
 
