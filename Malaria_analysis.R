@@ -1,4 +1,4 @@
-setwd(('C:/Users/sputhuma/Documents/HJF'))
+
 # Load necessary libraries
 library(tidyverse)
 library(readr)
