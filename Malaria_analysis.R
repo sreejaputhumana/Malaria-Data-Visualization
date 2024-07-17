@@ -146,6 +146,8 @@ tm_shape(incidence_map_data) +
             title.position = c("left", "top"),
             legend.outside = TRUE)
 
+
+
 # Insight 3: Comparison of cases and deaths
 case_death_comparison <- reported_numbers %>%
   filter(Year == max(Year)) %>%
