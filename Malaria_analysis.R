@@ -1,4 +1,3 @@
-
 # Load necessary libraries
 library(tidyverse)
 library(readr)
@@ -11,6 +10,7 @@ library(tmap)
 library(viridis)
 library(readr)
 library(gridExtra)
+library(htmlwidgets)
 
 # Load the datasets
 estimated_numbers <- read_csv("estimated_numbers.csv")
@@ -89,21 +89,26 @@ tm_shape(malaria_map_data) +
 
 
 # Alternatively, using ggplot2 for geospatial visualization
-ggplot(data = malaria_map_data) +
+plot1 <- ggplot(data = malaria_map_data) +
   geom_sf(aes(fill = `Reported Cases`)) +
   scale_fill_viridis_c() +
   labs(title = "Global Distribution of Reported Malaria Cases",
        fill = "Reported Cases") +
   theme_minimal()
 
+# Save the plot as a PNG file
+ggsave("scatter_plot.png", plot = plot1)
+
 # Interactive map with tmap
 tmap_mode("view")
 
-tm_shape(malaria_map_data) +
+plot2 <- tm_shape(malaria_map_data) +
   tm_polygons("Reported Cases", style = "quantile", palette = "viridis", title = "Reported Malaria Cases", 
               id = "NAME", popup.vars = c("Country Name" = "NAME", "Reported Cases" = "Reported Cases")) +
   tm_layout(title = "Global Distribution of Reported Malaria Cases")
 
+#Save the interactive plot as an HTML file
+saveWidget(tmap::tmap_leaflet(plot2), "interactive_plot.html")
 
 # Provide detailed insights
 
