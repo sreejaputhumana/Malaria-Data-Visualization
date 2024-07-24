@@ -12,3 +12,6 @@ https://sreejaputhumana.github.io/Malaria-Data-Visualization/Top%2050%20Countrie
 
 ## Visual Representation of Top 50 Countries with Reported Malaria Deaths (2000-2018)
 https://sreejaputhumana.github.io/Malaria-Data-Visualization/Top%2050%20Countries%20with%20Reported%20Malaria%20Deaths.html
+
+Acknowledgements / Data Source
+https://apps.who.int/gho/data/node.main.A1363?lang=en
